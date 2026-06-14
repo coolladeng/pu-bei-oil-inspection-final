@@ -31,26 +31,22 @@ jobs:
         with:
           gradle-version: 8.7
 
-      - name: Check dependency conflicts
+      - name: Clean
+        working-directory: android
+        run: gradle clean --no-daemon
+
+      - name: Build APK
         working-directory: android
         run: |
           set -o pipefail
-          gradle app:dependencies --configuration debugRuntimeClasspath --no-daemon 2>&1 | tee deps.log
+          gradle assembleDebug --no-daemon --stacktrace 2>&1 | tee assemble.log
 
-      - name: Build APK (no daemon, full stacktrace)
-        working-directory: android
-        run: |
-          set -o pipefail
-          gradle assembleDebug --no-daemon --stacktrace -Pandroid.enableR8=false 2>&1 | tee assemble.log
-
-      - name: Upload logs
+      - name: Upload assemble log
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: build-logs
-          path: |
-            android/assemble.log
-            android/deps.log
+          name: assemble-log
+          path: android/assemble.log
 
       - name: Upload APK
         uses: actions/upload-artifact@v4

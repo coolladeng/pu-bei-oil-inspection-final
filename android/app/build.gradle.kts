@@ -1,4 +1,4 @@
-plugins {
+﻿plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.dagger.hilt.android")
@@ -15,11 +15,12 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0.0"
-
-        buildConfigField("String", "BASE_URL", "\"http://10.0.2.2:8000/api/\"")
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "BASE_URL", "\"http://10.0.2.2:8000/api/\"")
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
@@ -34,7 +35,10 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
-    buildFeatures { compose = true; buildConfig = true }
+    buildFeatures {
+        compose = true
+        buildConfig = true
+    }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.14"
     }
@@ -72,7 +76,5 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
     implementation("io.coil-kt:coil-compose:2.6.0")
 
-    // AppCompat for Theme.AppCompat.Light.NoActionBar
     implementation("androidx.appcompat:appcompat:1.7.0")
-    implementation("com.google.android.material:material:1.12.0")
 }
