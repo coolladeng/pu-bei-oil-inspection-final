@@ -33,18 +33,12 @@ jobs:
 
       - name: Build Debug APK
         working-directory: android
-        run: |
-          gradle assembleDebug --stacktrace --no-daemon 2>&1 | tee build.log
-        continue-on-error: true
+        run: gradle assembleDebug --stacktrace --no-daemon
 
-      - name: Upload Build Log
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-log
-          path: android/build.log
+      - name: List APK outputs
+        run: find android/app/build/outputs -type f -name "*.apk" || echo "No APK files found"
 
       - name: Upload APK
-        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
