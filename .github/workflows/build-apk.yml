@@ -31,31 +31,11 @@ jobs:
         with:
           gradle-version: 8.7
 
-      - name: Process resources
+      - name: Build APK with info
         working-directory: android
         run: |
           set -o pipefail
-          gradle processDebugResources --no-daemon --stacktrace 2>&1 | tee resources.log
-
-      - name: Upload resources log
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: resources-log
-          path: android/resources.log
-
-      - name: Merge resources  
-        working-directory: android
-        run: |
-          set -o pipefail
-          gradle mergeDebugResources --no-daemon --stacktrace 2>&1 | tee merge.log
-        continue-on-error: true
-
-      - name: Assemble APK
-        working-directory: android
-        run: |
-          set -o pipefail
-          gradle assembleDebug --no-daemon --stacktrace 2>&1 | tee assemble.log
+          gradle assembleDebug --no-daemon --stacktrace --info 2>&1 | tee assemble.log
 
       - name: Upload assemble log
         if: always()
