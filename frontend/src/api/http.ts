@@ -31,8 +31,15 @@ request.interceptors.response.use(
       localStorage.removeItem('token')
       router.push('/login')
       ElMessage.error('登录已过期，请重新登录')
+    } else if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED') {
+      // 真正的网络错误（服务器不可达或超时）
+      ElMessage.error('服务器连接失败，请检查后端服务是否启动')
+    } else if (error.response) {
+      // 服务器返回了错误响应
+      const msg = error.response.data?.detail || error.response.data?.message || error.response.statusText || '服务器错误'
+      ElMessage.error(msg)
     } else {
-      ElMessage.error(error.response?.data?.message || '网络错误')
+      ElMessage.error('请求失败，请稍后重试')
     }
     return Promise.reject(error)
   }

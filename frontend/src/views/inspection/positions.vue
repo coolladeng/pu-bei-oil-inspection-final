@@ -84,11 +84,11 @@ interface Position {
 const loading = ref(false); const submitting = ref(false)
 const positions = ref<Position[]>([])
 const deptTree = ref<any[]>([])
-const searchForm = reactive({ dept_id: null as number | null, pos_type: '' })
+const searchForm = reactive({ dept_id: undefined as number | undefined, pos_type: '' })
 const dialogVisible = ref(false); const dialogTitle = ref('新增岗位')
 const editingId = ref<number | null>(null)
 const formRef = ref()
-const form = reactive({ name: '', dept_id: null as number | null, pos_type: '' })
+const form = reactive<{ name: string; dept_id: number | null; pos_type: string }>({ name: '', dept_id: null, pos_type: '' })
 const rules = {
   name: [{ required: true, message: '请输入岗位名称', trigger: 'blur' }],
   dept_id: [{ required: true, message: '请选择所属班组', trigger: 'change' }],
@@ -99,20 +99,26 @@ function typeLabel(t: string) { return { inspector: '巡检员', maintainer: '�
 function typeTag(t: string) { return { inspector: 'primary', maintainer: 'success', reviewer: 'warning', dispatcher: 'info' }[t] || '' }
 
 async function loadDeptTree() {
-  const data = await request.get('/departments')
-  deptTree.value = Array.isArray(data) ? data : []
+  try {
+    const data = await request.get('/departments')
+    deptTree.value = Array.isArray(data) ? data : []
+  } catch {
+    deptTree.value = []
+  }
 }
 async function loadPositions() {
   loading.value = true
   try {
     const params: any = {}
-    if (searchForm.dept_id) params.dept_id = searchForm.dept_id
+    if (searchForm.dept_id) params.dept_id = Number(searchForm.dept_id)
     if (searchForm.pos_type) params.pos_type = searchForm.pos_type
     const data = await request.get('/positions', { params })
     positions.value = data.list || data || []
+  } catch {
+    positions.value = []
   } finally { loading.value = false }
 }
-function resetSearch() { searchForm.dept_id = null; searchForm.pos_type = ''; loadPositions() }
+function resetSearch() { searchForm.dept_id = undefined; searchForm.pos_type = ''; loadPositions() }
 function resetForm() { form.name = ''; form.dept_id = null; form.pos_type = '' }
 
 function openDialog(row?: Position) {
@@ -123,11 +129,19 @@ function openDialog(row?: Position) {
 }
 async function submitForm() {
   const valid = await formRef.value.validate().catch(() => false)
-  if (!valid) return; submitting.value = true
+  if (!valid) return
+  submitting.value = true
   try {
-    if (editingId.value) { await request.put(`/positions/${editingId.value}`, form); ElMessage.success('更新成功') }
-    else { await request.post('/positions', form); ElMessage.success('创建成功') }
-    dialogVisible.value = false; loadPositions()
+    const payload = { name: form.name, dept_id: Number(form.dept_id), pos_type: form.pos_type }
+    if (editingId.value) {
+      await request.put(`/positions/${editingId.value}`, payload)
+      ElMessage.success('更新成功')
+    } else {
+      await request.post('/positions', payload)
+      ElMessage.success('创建成功')
+    }
+    dialogVisible.value = false
+    loadPositions()
   } finally { submitting.value = false }
 }
 async function handleDelete(row: Position) {

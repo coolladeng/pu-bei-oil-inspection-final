@@ -22,9 +22,9 @@ class Settings(BaseSettings):
     APP_NAME: str = "石油巡检与设备管理系统"
     DEBUG: bool = False
 
-    # 数据库配置 (异步 MySQL)
-    DATABASE_URL: str = "mysql+aiomysql://root:password@localhost:3306/oil_inspection?charset=utf8mb4"
-    SYNC_DATABASE_URL: str = "mysql+pymysql://root:password@localhost:3306/oil_inspection?charset=utf8mb4"
+    # 数据库配置 (默认使用SQLite, 生产环境可通过.env覆盖为MySQL)
+    DATABASE_URL: str = "sqlite+aiosqlite:///./oil_inspection.db"
+    SYNC_DATABASE_URL: str = "sqlite:///./oil_inspection.db"
 
     # Redis 配置
     REDIS_URL: str = "redis://localhost:6379/0"
