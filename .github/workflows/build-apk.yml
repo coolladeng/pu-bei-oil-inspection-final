@@ -31,26 +31,13 @@ jobs:
         with:
           gradle-version: 8.7
 
-      - name: Regenerate Wrapper
+      - name: Gradle tasks (test config)
         working-directory: android
-        run: gradle wrapper --gradle-version 8.7
+        run: gradle tasks --no-daemon 2>&1 | tee tasks.log
 
-      - name: Build (capture output)
-        working-directory: android
-        run: |
-          set -o pipefail
-          ./gradlew assembleDebug --stacktrace --no-daemon 2>&1 | tee build.log
-
-      - name: Upload Build Log
+      - name: Upload tasks log
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: build-log
-          path: android/build.log
-
-      - name: Upload APK
-        if: success()
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-debug
-          path: "**/*.apk"
+          name: tasks-log
+          path: android/tasks.log
