@@ -11,52 +11,32 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Setup JDK 17
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
-          distribution: 'temurin'
-
+          java-version: "17"
+          distribution: temurin
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
         with:
-          packages: 'platforms;android-34 build-tools;34.0.0 platform-tools'
-
-      - name: Debug env
-        run: env | grep -i android | sort
-
-      - name: Accept licenses and setup
+          packages: "platforms;android-34 build-tools;34.0.0 platform-tools"
+      - name: Setup SDK
         run: |
           ANDROID_SDK=$(find / -type d -name "platforms" -path "*/android/*" 2>/dev/null | head -1 | xargs dirname)
           echo "Android SDK: $ANDROID_SDK"
-          if [ -n "$ANDROID_SDK" ]; then
-            yes | $ANDROID_SDK/cmdline-tools/latest/bin/sdkmanager --licenses 2>/dev/null || true
-            echo "sdk.dir=$ANDROID_SDK" > android/local.properties
-          else
-            echo "sdk.dir=/usr/local/lib/android/sdk" > android/local.properties
-          fi
-          cat android/local.properties
-
+          yes | $ANDROID_SDK/cmdline-tools/latest/bin/sdkmanager --licenses 2>/dev/null || true
+          echo "sdk.dir=$ANDROID_SDK" > android/local.properties
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: 8.7
-
+          gradle-version: "8.7"
       - name: Build APK
         working-directory: android
-        run: |
-          gradle assembleDebug --no-daemon --stacktrace 2>&1 | tee assemble.log
-
-      - name: Upload assemble log
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: assemble-log
-          path: android/assemble.log
-
+        run: gradle assembleDebug --no-daemon
+      - name: List APK files
+        run: find . -name "*.apk" -type f -ls
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
-          path: "**/*.apk"
+          path: android/app/build/outputs/apk/debug/app-debug.apk
