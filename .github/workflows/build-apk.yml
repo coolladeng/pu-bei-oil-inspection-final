@@ -33,20 +33,16 @@ jobs:
 
       - name: Build Debug APK
         working-directory: android
-        run: gradle assembleDebug --stacktrace --no-daemon || true
+        run: gradle assembleDebug --stacktrace --no-daemon
 
-      - name: Upload Build Reports
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-reports
-          path: |
-            android/app/build/reports/
-            android/app/build/outputs/
+      - name: Check APK exists
+        run: |
+          echo "Checking for APK files..."
+          find android -name "*.apk" -type f 2>/dev/null || echo "No APK found"
+          ls -la android/app/build/outputs/apk/debug/ 2>/dev/null || echo "Debug APK dir not found"
 
       - name: Upload APK
-        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: android/app/build/outputs/apk/debug/*.apk
