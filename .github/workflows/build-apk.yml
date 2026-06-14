@@ -26,19 +26,14 @@ jobs:
       - name: Create local.properties
         run: echo "sdk.dir=" > android/local.properties
 
-      - name: Make gradlew executable
-        run: chmod +x android/gradlew
-
-      - name: Check Java
-        run: java -version
-
-      - name: Check Gradle Wrapper
-        working-directory: android
-        run: ./gradlew --version --no-daemon
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.7
 
       - name: Build Debug APK
         working-directory: android
-        run: ./gradlew assembleDebug --no-daemon --stacktrace
+        run: gradle assembleDebug --stacktrace --no-daemon
 
       - name: Upload APK
         if: success()
