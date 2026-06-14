@@ -33,7 +33,15 @@ jobs:
 
       - name: Build Debug APK
         working-directory: android
-        run: gradle assembleDebug --stacktrace --no-daemon
+        run: |
+          gradle assembleDebug --stacktrace --no-daemon 2>&1 | tee build.log
+        continue-on-error: true
+
+      - name: Upload Build Log
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: android/build.log
 
       - name: Upload APK
         if: success()
