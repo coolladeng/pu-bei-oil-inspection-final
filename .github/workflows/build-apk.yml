@@ -31,11 +31,28 @@ jobs:
         with:
           gradle-version: 8.7
 
-      - name: Clean
+      - name: Compile Java
         working-directory: android
-        run: gradle clean --no-daemon
+        run: |
+          set -o pipefail
+          gradle compileDebugJavaWithJavac --no-daemon --stacktrace --info 2>&1 | tee javac.log
 
-      - name: Build APK
+      - name: DEX
+        working-directory: android  
+        run: |
+          set -o pipefail
+          gradle dexBuilderDebug --no-daemon --stacktrace --info 2>&1 | tee dex.log
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs
+          path: |
+            android/javac.log
+            android/dex.log
+
+      - name: Full assemble
         working-directory: android
         run: |
           set -o pipefail
