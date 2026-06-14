@@ -31,18 +31,26 @@ jobs:
         with:
           gradle-version: 8.7
 
-      - name: Assemble without KSP
+      - name: Check dependency conflicts
         working-directory: android
         run: |
           set -o pipefail
-          gradle assembleDebug -x kspDebugKotlin --no-daemon --stacktrace 2>&1 | tee assemble.log
+          gradle app:dependencies --configuration debugRuntimeClasspath --no-daemon 2>&1 | tee deps.log
 
-      - name: Upload assemble log
+      - name: Build APK (no daemon, full stacktrace)
+        working-directory: android
+        run: |
+          set -o pipefail
+          gradle assembleDebug --no-daemon --stacktrace -Pandroid.enableR8=false 2>&1 | tee assemble.log
+
+      - name: Upload logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: assemble-log
-          path: android/assemble.log
+          name: build-logs
+          path: |
+            android/assemble.log
+            android/deps.log
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
