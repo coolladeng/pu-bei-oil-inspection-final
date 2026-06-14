@@ -1,6 +1,5 @@
-package com.oilinspection.app.data.api
+﻿package com.oilinspection.app.data.api
 
-import com.oilinspection.app.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -30,7 +29,7 @@ object RetrofitClient {
     }
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
-        level = if (BuildConfig.DEBUG)
+        level = if (true)
             HttpLoggingInterceptor.Level.BODY
         else
             HttpLoggingInterceptor.Level.NONE
@@ -45,7 +44,7 @@ object RetrofitClient {
         .build()
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl(BuildConfig.BASE_URL)
+        .baseUrl("http://10.0.2.2:8000/api/")
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
