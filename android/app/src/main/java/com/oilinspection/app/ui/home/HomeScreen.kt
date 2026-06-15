@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -365,7 +366,7 @@ private fun BottomNavBar(selectedTab: Int, onTabSelected: (Int) -> Unit) {
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-private fun BottomNavItem(
+private fun RowScope.BottomNavItem(
     index: Int, label: String, icon: ImageVector,
     selectedTab: Int, onTabSelected: (Int) -> Unit
 ) {
@@ -386,7 +387,6 @@ private fun BottomNavItem(
 
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 private fun EquipmentTab(
     equipments: List<EquipmentItem>,
     isLoading: Boolean,
@@ -475,7 +475,6 @@ private fun EquipmentCard(equip: EquipmentItem) {
 }
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 private fun HazardTab(
     hazards: List<HazardItem>,
     isLoading: Boolean,
