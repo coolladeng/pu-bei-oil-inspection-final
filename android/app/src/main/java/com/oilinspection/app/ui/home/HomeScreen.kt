@@ -195,7 +195,7 @@ private fun InspectionTabContent(
                             ) {
                                 Icon(Icons.Filled.CheckCircle, null, tint = SuccessGreen, modifier = Modifier.size(20.dp))
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text("已同步 ${uiState.syncedCount} 条离线记录", color = SuccessGreen, style = MaterialTheme.typography.bodySmall)
+                                Text("已同�?${uiState.syncedCount} 条离线记�?, color = SuccessGreen, style = MaterialTheme.typography.bodySmall)
                             }
                         }
                     }
@@ -253,7 +253,7 @@ private fun ProgressCard(completed: Int, total: Int) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("已完成 $completed", color = SuccessGreen, style = MaterialTheme.typography.bodySmall)
+                Text("已完�?$completed", color = SuccessGreen, style = MaterialTheme.typography.bodySmall)
                 Text("待巡检 ${total - completed}", color = WarningAmber, style = MaterialTheme.typography.bodySmall)
             }
         }
@@ -278,7 +278,7 @@ private fun InspectionPlanCard(plan: RunPlanItem, onClick: () -> Unit) {
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // 状态图标
+            // 状态图�?
             Box(
                 modifier = Modifier
                     .size(44.dp)
@@ -299,10 +299,10 @@ private fun InspectionPlanCard(plan: RunPlanItem, onClick: () -> Unit) {
 
             Spacer(modifier = Modifier.width(14.dp))
 
-            // 信息区
+            // 信息�?
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = plan.pointName ?: "巡检点 #${plan.pointId}",
+                    text = plan.pointName ?: "巡检�?#${plan.pointId}",
                     style = MaterialTheme.typography.titleMedium,
                     color = if (isCompleted) TextMuted else TextPrimary,
                     maxLines = 1,
@@ -323,7 +323,7 @@ private fun InspectionPlanCard(plan: RunPlanItem, onClick: () -> Unit) {
                 }
             }
 
-            // 状态标签
+            // 状态标�?
             Text(
                 text = if (isCompleted) "已检" else "待检",
                 style = MaterialTheme.typography.labelMedium,
@@ -386,6 +386,7 @@ private fun RowScope.BottomNavItem(
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun EquipmentTab(
     equipments: List<EquipmentItem>,
@@ -419,7 +420,7 @@ private fun EquipmentTab(
 private fun EquipmentCard(equip: EquipmentItem) {
     val statusLabel = when (equip.status) {
         1 -> "正常"
-        2 -> "维修中"
+        2 -> "维修�?
         3 -> "报废"
         else -> "未知"
     }
@@ -474,6 +475,7 @@ private fun EquipmentCard(equip: EquipmentItem) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HazardTab(
     hazards: List<HazardItem>,
@@ -506,9 +508,9 @@ private fun HazardTab(
 @Composable
 private fun HazardCard(hazard: HazardItem) {
     val urgencyLabel = when (hazard.urgency) {
-        "urgent" -> "紧急"
+        "urgent" -> "紧�?
         "important" -> "重要"
-        else -> "一般"
+        else -> "一�?
     }
     val urgencyColor = when (hazard.urgency) {
         "urgent" -> DangerRed
@@ -516,11 +518,11 @@ private fun HazardCard(hazard: HazardItem) {
         else -> TextMuted
     }
     val statusLabel = when (hazard.status) {
-        "reported" -> "已上报"
-        "reviewing" -> "审核中"
-        "handling" -> "处理中"
-        "completed" -> "已完成"
-        "closed" -> "已关闭"
+        "reported" -> "已上�?
+        "reviewing" -> "审核�?
+        "handling" -> "处理�?
+        "completed" -> "已完�?
+        "closed" -> "已关�?
         else -> hazard.status
     }
 
@@ -591,7 +593,7 @@ private fun ProfileTab(
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            profile?.realName ?: "未登录",
+            profile?.realName ?: "未登�?,
             color = TextPrimary,
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold
@@ -614,7 +616,7 @@ private fun ProfileTab(
             shape = RoundedCornerShape(14.dp)
         ) {
             Column(modifier = Modifier.padding(20.dp)) {
-                InfoRow("用户名", profile?.username ?: "-")
+                InfoRow("用户�?, profile?.username ?: "-")
                 HorizontalDivider(color = Color(0xFF1A3355), modifier = Modifier.padding(vertical = 12.dp))
                 InfoRow("角色", profile?.roles?.joinToString(", ") ?: "-")
                 HorizontalDivider(color = Color(0xFF1A3355), modifier = Modifier.padding(vertical = 12.dp))
@@ -636,7 +638,7 @@ private fun ProfileTab(
                 contentColor = DangerRed
             )
         ) {
-            Text("退出登录", fontWeight = FontWeight.Bold)
+            Text("退出登�?, fontWeight = FontWeight.Bold)
         }
 
         Spacer(modifier = Modifier.height(24.dp))
