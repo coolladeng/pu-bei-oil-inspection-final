@@ -20,10 +20,11 @@ jobs:
         uses: android-actions/setup-android@v3
         with:
           packages: "platforms;android-34 build-tools;34.0.0 platform-tools"
-      - name: Setup SDK
+      - name: Setup SDK path
         run: |
-          ANDROID_SDK=$(find / -type d -name "platforms" -path "*/android/*" 2>/dev/null | head -1 | xargs dirname)
+          ANDROID_SDK="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
           echo "sdk.dir=$ANDROID_SDK" > android/local.properties
+          echo "Using SDK: $ANDROID_SDK"
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
@@ -31,6 +32,7 @@ jobs:
       - name: Build APK
         working-directory: android
         run: |
+          set -o pipefail
           gradle assembleDebug --no-daemon --stacktrace 2>&1 | tee ../assemble.log
           exit ${PIPESTATUS[0]}
       - name: List APK files
